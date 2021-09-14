@@ -3,7 +3,7 @@ import { Button, Typography, Input } from "antd";
 import { DeleteOutlined } from '@ant-design/icons';
 import './App.less';
 import ResizePanel from "react-resize-panel";
-import { Hook, Console, Decode } from "console-feed"; //https://openbase.com/js/console-feed
+import { Hook, Console, Decode, Unhook } from "console-feed"; //https://openbase.com/js/console-feed
 
 const { ipcRenderer } = window.require("electron");
 
@@ -28,6 +28,10 @@ class App extends React.Component {
     Hook(window.console, (log) => {
       this.setState(({ logs }) => ({ logs: [...logs, Decode(log)] }))
     })
+  }
+  
+  componentWillUnmount(){
+    Unhook(window.console)
   }
 
   render() {
@@ -67,15 +71,10 @@ class App extends React.Component {
                   //https://github.com/samdenty/console-feed/blob/master/src/definitions/Styles.d.ts
                   //https://github.com/samdenty/console-feed/blob/master/src/Component/theme/default.ts
                   styles={{
-                    PADDING: '0px 10px px 0',
-                    LOG_AMOUNT_BACKGROUND: "",
+                    PADDING: '0px 22px 0px 0px',
                     //console.warn()
-                    LOG_WARN_AMOUNT_BACKGROUND: "none",
-                    LOG_WARN_BACKGROUND: "",
                     LOG_WARN_BORDER: "",
                     //console.err()
-                    LOG_ERROR_AMOUNT_BACKGROUND: "none",
-                    LOG_ERROR_BACKGROUND: "none",
                     LOG_ERROR_BORDER: ""
                   }}
                   logs={this.state.logs}
